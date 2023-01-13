@@ -14,13 +14,13 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     env:
-      archive-name: p2llvm-${{ github.event.inputs.branch }}-${RUNNER_OS}-${RUNNER_ARCH}
-      install_dest: ${GITHUB_WORKSPACE}/llvm-project/build_release
+      arch_name: "p2llvm-${{ github.event.inputs.branch }}-${RUNNER_OS}-${RUNNER_ARCH}"
+      install_dest: "${GITHUB_WORKSPACE}/llvm-project/build_release"
     steps:
     - name: Print environment variables
       run: |
         echo ${install_dest}
-        echo ${archive-name}
+        echo ${arch_name}
     # Get runner core count
     - name: Get number of CPU cores
       uses: SimenB/github-actions-cpu-cores@v1
@@ -45,7 +45,7 @@ jobs:
       run: mkdir -p ./libp2/build
     - name: Configure libp2
       working-directory: ./libp2/build
-      run: cmake -Dllvm=${install_dest}/bin ../
+      run: cmake -Dllvm="${install_dest}/bin" ../
     - name: Build libp2
       working-directory: ./libp2/build
       run: make LLVM=${install_dest} -j${{ steps.cpu-cores.outputs.count }}
@@ -54,7 +54,7 @@ jobs:
       run: mkdir -p ./libc/build
     - name: Configure libc
       working-directory: ./libc/build
-      run: cmake -Dllvm=${install_dest}/bin ../
+      run: cmake -Dllvm="${install_dest}/bin ../"
     - name: Build libc
       working-directory: ./libc/build
       run: make LLVM=${install_dest} -j${{ steps.cpu-cores.outputs.count }}
