@@ -27,10 +27,6 @@ jobs:
         repository: RileyMcCarthy/p2llvm-build-fix
         ref: ${{ github.event.inputs.branch }}
         submodules: recursive
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.10'
     # Build llvm
     - name: Create install directory
       run: mkdir -p ${install_dest}
