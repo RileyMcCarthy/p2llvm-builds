@@ -14,8 +14,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     env:
-      arch_name: p2llvm-${{ github.event.inputs.branch }}-${{ env.runner.os }}-${{ env.runner.arch }}
-      install_dest: "$GITHUB_WORKSPACE/llvm-project/build_release"
+      arch_name: p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}
+      install_dest: ${{github.workspace}}/llvm-project/build_release
     steps:
     - name: Print environment variables
       run: |
