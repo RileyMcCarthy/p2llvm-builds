@@ -17,6 +17,10 @@ jobs:
       archive-name: p2llvm-${{ github.event.inputs.branch }}-${RUNNER_OS}-${RUNNER_ARCH}
       install_dest: ${GITHUB_WORKSPACE}/llvm-project/build_release
     steps:
+    - name: Print environment variables
+      run: |
+        echo ${install_dest}
+        echo ${archive-name}
     # Get runner core count
     - name: Get number of CPU cores
       uses: SimenB/github-actions-cpu-cores@v1
