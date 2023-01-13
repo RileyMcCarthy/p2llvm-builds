@@ -14,13 +14,13 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     env:
-      arch_name: "p2llvm-${{ github.event.inputs.branch }}-$RUNNER_OS-$RUNNER_ARCH"
+      arch_name: p2llvm-${{ github.event.inputs.branch }}-${{ env.runner.os }}-${{ env.runner.arch }}
       install_dest: "$GITHUB_WORKSPACE/llvm-project/build_release"
     steps:
     - name: Print environment variables
       run: |
-        echo "Installing to $install_dest"
-        echo "Archive name $arch_name"
+        echo "Installing to ${{env.install_dest}}"
+        echo "Archive name ${{env.arch_name}}"
     # Get runner core count
     - name: Get number of CPU cores
       uses: SimenB/github-actions-cpu-cores@v1
