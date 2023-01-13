@@ -1,0 +1,62 @@
+name: build-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to release from'     
+        required: true
+        default: 'master'
+jobs:
+  build-multiplatform:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    env:
+      archive-name: p2llvm-${{ github.event.inputs.branch }}-$RUNNER_OS-$RUNNER_ARCH
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        repository: ne75/p2llvm
+        ref: ${{ github.event.inputs.branch }}
+        submodules: recursive
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+    - name: Create and enter release
+      working-directory: ./llvm-project
+      run: mkdir -p build_release
+    - name: Run llvm cmake
+      working-directory: ./llvm-project/build_release
+      run: cmake -G "Unix Makefiles" -DLLVM_ENABLE_PROJECTS="lld;clang" -DCMAKE_BUILD_TYPE=Release -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=P2 -DLLVM_TARGETS_TO_BUILD="" ../llvm
+    - name: install
+      working-directory: ./llvm-project/build_release
+      run: make
+    - name: Zip Release
+      run: zip -r $archive-name.zip ./llvm-project/build_release
+    - name: Archive results
+      uses: actions/upload-artifact@v3
+      with:
+        name: $archive-name
+        path: $archive-name.zip
+    - name: Upload build zip
+      uses: actions/upload-artifact@v3
+      with:
+        name: $archive-name
+        path: $archive-name.zipw
+  create-release:
+    needs: build-multiplatform
+    runs-on: windows-latest
+    steps:
+    - name: Create artifact dir
+      run: mkdir -p ./artifacts
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: ./artifacts
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: "./artifacts/*"
+        makeLatest: true
