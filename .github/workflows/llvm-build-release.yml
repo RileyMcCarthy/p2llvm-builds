@@ -16,12 +16,12 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
-    - name: Print environment variables
-      run: echo "Installing to ${{env.install_dest}}"
     # Get runner core count
     - name: Get number of CPU cores
       uses: SimenB/github-actions-cpu-cores@v1
       id: cpu-cores
+    - name: Build Information
+      run: echo "Installing to ${{env.install_dest}} with {{ steps.cpu-cores.outputs.count }} cores"
     # Checkout p2llvm repo and setup environment
     - uses: actions/checkout@v3
       with:
@@ -31,10 +31,10 @@ jobs:
     # Build llvm
     - name: Create install directory
       run: mkdir -p ${{env.install_dest}}
-    - name: Run llvm cmake
+    - name: Configure llvm cmake
       working-directory: ${{env.install_dest}}
       run: cmake -G "Unix Makefiles" -DLLVM_ENABLE_PROJECTS="lld;clang" -DCMAKE_BUILD_TYPE=Release -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=P2 -DLLVM_TARGETS_TO_BUILD="" ../llvm
-    - name: install
+    - name: Build LLVM
       working-directory: ${{env.install_dest}}
       run: make -j${{ steps.cpu-cores.outputs.count }}
     # Build libp2
