@@ -10,7 +10,6 @@ on:
 jobs:
   build-multiplatform:
     env:
-      arch_name: p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}
       install_dest: ${{ github.workspace }}/llvm-project/build_release
     runs-on: ${{ matrix.os }}
     strategy:
@@ -58,17 +57,12 @@ jobs:
       run: make LLVM="$install_dest" -j${{ steps.cpu-cores.outputs.count }}
     # Archiving build
     - name: Zip Release
-      run: zip -r "$arch_name.zip" ./llvm-project/build_release
+      run: zip -r "p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip" ./llvm-project/build_release
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
-        name: "$arch_name"
-        path: "$arch_name.zip"
-    - name: Upload build zip
-      uses: actions/upload-artifact@v3
-      with:
-        name: "$arch_name"
-        path: "$arch_name.zip"
+        name: "p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}"
+        path: "p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip"
   create-release:
     needs: build-multiplatform
     runs-on: windows-latest
