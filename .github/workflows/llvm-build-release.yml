@@ -72,7 +72,7 @@ jobs:
     needs: build-multiplatform
     runs-on: windows-latest
     env:
-      arch_name: p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}
+      arch_name: "p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}"
     steps:
     - name: Create artifact dir
       run: mkdir -p ./artifacts
