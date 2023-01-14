@@ -13,11 +13,12 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-    env:
-      install_dest: ${{github.workspace}}/llvm-project/build_release
     steps:
+    - env:
+        arch_name: "p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}"
+        install_dest: ${{github.workspace}}/llvm-project/build_release
     - name: Print environment variables
-      run: echo "Installing to ${{env.install_dest}}"
+      run: echo "Installing to ${{env.install_dest}} with name ${{env.arch_name}}"
     # Get runner core count
     - name: Get number of CPU cores
       uses: SimenB/github-actions-cpu-cores@v1
@@ -71,8 +72,6 @@ jobs:
   create-release:
     needs: build-multiplatform
     runs-on: windows-latest
-    env:
-      arch_name: "p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}"
     steps:
     - name: Create artifact dir
       run: mkdir -p ./artifacts
