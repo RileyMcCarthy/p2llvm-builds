@@ -14,9 +14,11 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
-    - env:
+    - name: Create environment variables 
+      env:
         arch_name: "p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}"
         install_dest: ${{github.workspace}}/llvm-project/build_release
+      run: echo "Installing to ${{env.install_dest}} with name ${{env.arch_name}}"
     - name: Print environment variables
       run: echo "Installing to ${{env.install_dest}} with name ${{env.arch_name}}"
     # Get runner core count
