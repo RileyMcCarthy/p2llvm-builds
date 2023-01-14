@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
     steps:
     # Get runner core count
     - name: Get number of CPU cores
@@ -30,13 +30,13 @@ jobs:
         submodules: recursive
     # Build llvm
     - name: Create install directory
-      run: mkdir -p ${{env.install_dest}}
+      run: mkdir -p ${{ github.workspace }}/llvm-project/build
     - name: Configure llvm cmake
-      working-directory: ${{env.install_dest}}
-      run: cmake -G "Unix Makefiles" -DLLVM_ENABLE_PROJECTS="lld;clang" -DCMAKE_BUILD_TYPE=Release -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=P2 -DLLVM_TARGETS_TO_BUILD="" ../llvm
+      working-directory: ${{ github.workspace }}/llvm-project/build
+      run: cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=${{env.install_dest}} -DLLVM_ENABLE_PROJECTS="lld;clang" -DCMAKE_BUILD_TYPE=Release -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=P2 -DLLVM_TARGETS_TO_BUILD="" ../llvm
     - name: Build LLVM
-      working-directory: ${{env.install_dest}}
-      run: make -j${{ steps.cpu-cores.outputs.count }}
+      working-directory: ${{ github.workspace }}/llvm-project/build
+      run: make install -j${{ steps.cpu-cores.outputs.count }}
     # Build libp2
     - name: Create libp2 build directory
       run: mkdir -p ./libp2/build
