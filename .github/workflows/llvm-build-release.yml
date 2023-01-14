@@ -33,7 +33,7 @@ jobs:
       run: mkdir -p ${{ github.workspace }}/llvm-project/build
     - name: Configure llvm cmake
       working-directory: ${{ github.workspace }}/llvm-project/build
-      run: cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=${{env.install_dest}} -DLLVM_ENABLE_PROJECTS="lld;clang" -DCMAKE_BUILD_TYPE=Release -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=P2 -DLLVM_TARGETS_TO_BUILD="" ../llvm
+      run: cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=${{env.install_dest}} -DLLVM_ENABLE_PROJECTS="lld;clang" -DCMAKE_BUILD_TYPE=MinSizeRel -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=P2 -DLLVM_TARGETS_TO_BUILD="" ../llvm
     - name: Build LLVM
       working-directory: ${{ github.workspace }}/llvm-project/build
       run: make install -j${{ steps.cpu-cores.outputs.count }}
