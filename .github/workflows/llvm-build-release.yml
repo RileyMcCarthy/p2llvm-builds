@@ -38,7 +38,7 @@ jobs:
       working-directory: ${{env.install_dest}}
       run: make -j${{ steps.cpu-cores.outputs.count }}
     # Build libp2
-    - name: Create build directory
+    - name: Create libp2 build directory
       run: mkdir -p ./libp2/build
     - name: Configure libp2
       working-directory: ./libp2/build
@@ -46,8 +46,17 @@ jobs:
     - name: Build libp2
       working-directory: ./libp2/build
       run: make LLVM=${{env.install_dest}} -j${{ steps.cpu-cores.outputs.count }}
+    # Build libp2++
+    - name: Create libp2++ build directory
+      run: mkdir -p ./libp2++/build
+    - name: Configure libp2++
+      working-directory: ./libp2++/build
+      run: cmake -Dllvm=${{env.install_dest}}/bin ../
+    - name: Build libp2++
+      working-directory: ./libp2++/build
+      run: make LLVM=${{env.install_dest}} -j${{ steps.cpu-cores.outputs.count }}
     # Build libc
-    - name: Create build directory
+    - name: Create libc build directory
       run: mkdir -p ./libc/build
     - name: Configure libc
       working-directory: ./libc/build
