@@ -34,7 +34,8 @@ jobs:
     - name: Configure llvm cmake
       working-directory: ${{ github.workspace }}/llvm-project/build
       # -DLLVM_BUILD_TOOLS and below is for minimal build, maybe have full and small release?
-      run: cmake -G "Unix Makefiles" \
+      run: |
+        cmake -G "Unix Makefiles" \
         -DLLVM_INSTALL_UTILS=true \
         -DCMAKE_INSTALL_PREFIX=${{env.install_dest}} \
         -DLLVM_ENABLE_PROJECTS="lld;clang" \
