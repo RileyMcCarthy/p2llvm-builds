@@ -87,13 +87,17 @@ jobs:
         cp -r ./libc/include ${{env.install_dest}}/libc
     # Zip artifacts
     - name: Zip artifact for deployment
-      run: zip -r p2llvm.zip ${{env.install_dest}}
+      uses: vimtor/action-zip@v1
+      with:
+        files: ${{env.install_dest}}/
+        dest: p2llvm.zip
+        recursive: true
     # Uploading build files
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
         name: "p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip"
-        path: p2llvm.zip
+        path: ${{ github.workspace }}/p2llvm.zip
   create-release:
     needs: build-multiplatform
     runs-on: windows-latest
