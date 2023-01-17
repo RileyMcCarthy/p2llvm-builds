@@ -87,17 +87,14 @@ jobs:
         cp -r ./libc/include ${{env.install_dest}}/libc
     # Zip artifacts
     - name: Zip artifact for deployment
-      uses: vimtor/action-zip@v1
-      with:
-        files: ${{env.install_dest}}/
-        dest: p2llvm.zip
-        recursive: true
+      dest: p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip ${{env.install_dest}}/
+      run: zip -r p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip 
     # Uploading build files
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
-        name: "p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip"
-        path: ${{ github.workspace }}/p2llvm.zip
+        name: p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip
+        path: ${{ github.workspace }}/p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip
   create-release:
     needs: build-multiplatform
     runs-on: windows-latest
