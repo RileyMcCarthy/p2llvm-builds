@@ -42,19 +42,6 @@ jobs:
         -DCMAKE_BUILD_TYPE=Release
         -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=P2
         -DLLVM_TARGETS_TO_BUILD=""
-        -DCMAKE_BUILD_TYPE=MinSizeRel
-        -DLLVM_BUILD_RUNTIME=Off
-        -DLLVM_INCLUDE_TESTS=Off
-        -DLLVM_INCLUDE_EXAMPLES=Off
-        -DLLVM_ENABLE_BACKTRACES=Off
-        -DLLVM_ENABLE_OCAMLDOC=Off
-        -DLLVM_BUILD_UTILS=Off
-        -DLLVM_BUILD_DOCS=Off
-        -DLLVM_OPTIMIZED_TABLEGEN=On
-        -DCLANG_ENABLE_ARCMT=Off
-        -DCLANG_ENABLE_STATIC_ANALYZER=Off
-        -DCLANG_INCLUDE_TESTS=Off
-        -DCLANG_BUILD_EXAMPLES=Off
         ../llvm
     - name: Build LLVM
       working-directory: ${{ github.workspace }}/llvm-project/build
