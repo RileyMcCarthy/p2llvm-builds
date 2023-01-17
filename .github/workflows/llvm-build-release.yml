@@ -87,8 +87,7 @@ jobs:
         cp -r ./libc/include ${{env.install_dest}}/libc
     # Zip artifacts
     - name: Zip artifact for deployment
-      dest: p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip ${{env.install_dest}}/
-      run: zip -r p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip 
+      run: zip -r p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip ${{env.install_dest}}
     # Uploading build files
     - name: Archive results
       uses: actions/upload-artifact@v3
