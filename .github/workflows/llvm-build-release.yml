@@ -104,9 +104,8 @@ jobs:
     - name: Release with Notes
       uses: softprops/action-gh-release@v1
       with:
-        files: ./artifacts/*
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        files: ./artifacts/*/*
+        tag_name: Release ${{ github.event.inputs.branch }}
         draft: false
         prerelease: false
       env:
