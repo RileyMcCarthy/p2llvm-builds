@@ -88,7 +88,7 @@ jobs:
     # Create platformio package.json
     - name: Create package.json
       run: |
-        touch package.json
+        touch '${{env.install_dest}}/package.json'
         echo "
         {
           "name": "toolchain-p2llvm",
@@ -108,7 +108,7 @@ jobs:
           "homepage": "https://github.com/ne75/p2llvm",
           "license": "GPL-2.0-or-later"
         }
-        " >> package.json
+        " >> '${{env.install_dest}}/package.json'
     # Zip artifacts
     - name: Zip artifact for deployment
       working-directory: '${{env.install_dest}}'
