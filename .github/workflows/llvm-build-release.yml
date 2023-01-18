@@ -85,6 +85,30 @@ jobs:
       run: |
         cp ./libc/build/libc.a '${{env.install_dest}}/libc/lib/libc.a'
         cp -r ./libc/include '${{env.install_dest}}/libc'
+    # Create platformio package.json
+    - name: Create package.json
+      run: |
+        touch package.json
+        echo "
+        {
+          "name": "toolchain-p2llvm",
+          "version": "${{ github.event.inputs.branch }}",
+          "description": "LLVM Toolchain for Microchip AVR microcontrollers",
+          "keywords": [
+            "toolchain",
+            "build tools",
+            "compiler",
+            "assembler",
+            "linker",
+            "preprocessor",
+            "microchip",
+            "parallax",
+            "propeller"
+          ],
+          "homepage": "https://github.com/ne75/p2llvm",
+          "license": "GPL-2.0-or-later"
+        }
+        " >> package.json
     # Zip artifacts
     - name: Zip artifact for deployment
       working-directory: '${{env.install_dest}}'
