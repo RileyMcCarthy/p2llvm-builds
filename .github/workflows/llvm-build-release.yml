@@ -38,7 +38,7 @@ jobs:
       run: >
         cmake -G "Unix Makefiles" 
         -DLLVM_INSTALL_UTILS=true
-        -DCMAKE_INSTALL_PREFIX=${{env.install_dest}}
+        -DCMAKE_INSTALL_PREFIX='${{env.install_dest}}'
         -DLLVM_ENABLE_PROJECTS="lld;clang"
         -DCMAKE_BUILD_TYPE=Release
         -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=P2
@@ -49,52 +49,52 @@ jobs:
       run: make install -j${{ steps.cpu-cores.outputs.count }}
     # Copy Linker files
     - name: Copying linker file p2.ld
-      run: cp ./libp2/p2.ld ${{env.install_dest}}
+      run: cp ./libp2/p2.ld '${{env.install_dest}}'
     - name: Copying linker file p2_debug.ld
-      run: cp ./libp2/p2_debug.ld ${{env.install_dest}}
+      run: cp ./libp2/p2_debug.ld '${{env.install_dest}}'
     # Build libp2
     - name: Create libp2 build directory
       run: mkdir -p ./libp2/build
     - name: Configure libp2
       working-directory: ./libp2/build
-      run: cmake -Dllvm=${{env.install_dest}}/bin ../
+      run: cmake -Dllvm='${{env.install_dest}}/bin ../'
     - name: Build libp2
       working-directory: ./libp2/build
-      run: make LLVM=${{env.install_dest}} -j${{ steps.cpu-cores.outputs.count }}
+      run: make LLVM='${{env.install_dest}}' -j${{ steps.cpu-cores.outputs.count }}
     # Install libp2
     - name: Create libp2 install directory
-      run: mkdir -p ${{env.install_dest}}/libp2/lib
+      run: mkdir -p '${{env.install_dest}}/libp2/lib'
     - name: Copy libp2 files
       run: |
-        cp ./libp2/build/lib/libp2.a ${{env.install_dest}}/libp2/lib/libp2.a
-        cp ./libp2/build/lib/p2db/libp2db.a ${{env.install_dest}}/libp2/lib/libp2db.a
-        cp -r ./libp2/include ${{env.install_dest}}/libp2
+        cp ./libp2/build/lib/libp2.a '${{env.install_dest}}/libp2/lib/libp2.a'
+        cp ./libp2/build/lib/p2db/libp2db.a '${{env.install_dest}}/libp2/lib/libp2db.a'
+        cp -r ./libp2/include '${{env.install_dest}}/libp2'
     # Build libc
     - name: Create libc build directory
       run: mkdir -p ./libc/build
     - name: Configure libc
       working-directory: ./libc/build
-      run: cmake -Dllvm=${{env.install_dest}}/bin ../
+      run: cmake -Dllvm='${{env.install_dest}}/bin' ../
     - name: Build libc
       working-directory: ./libc/build
-      run: make LLVM=${{env.install_dest}} -j${{ steps.cpu-cores.outputs.count }}
+      run: make LLVM='${{env.install_dest}}' -j${{ steps.cpu-cores.outputs.count }}
     # Install libc
     - name: Create libc install directory
-      run: mkdir -p ${{env.install_dest}}/libc/lib
+      run: mkdir -p '${{env.install_dest}}/libc/lib'
     - name: Copy libp2 files
       run: |
-        cp ./libc/build/libc.a ${{env.install_dest}}/libc/lib/libc.a
-        cp -r ./libc/include ${{env.install_dest}}/libc
+        cp ./libc/build/libc.a '${{env.install_dest}}/libc/lib/libc.a'
+        cp -r ./libc/include '${{env.install_dest}}/libc'
     # Zip artifacts
     - name: Zip artifact for deployment
-      working-directory: ${{env.install_dest}}
+      working-directory: '${{env.install_dest}}'
       run: zip -r p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip .
     # Uploading build files
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
         name: p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip
-        path: ${{env.install_dest}}/p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip
+        path: '${{env.install_dest}}/p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip'
   create-release:
     needs: build-multiplatform
     runs-on: windows-latest
