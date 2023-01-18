@@ -87,13 +87,14 @@ jobs:
         cp -r ./libc/include ${{env.install_dest}}/libc
     # Zip artifacts
     - name: Zip artifact for deployment
-      run: zip -r p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip ${{env.install_dest}}
+      working-directory: ${{env.install_dest}}
+      run: zip -r p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip .
     # Uploading build files
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
         name: p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip
-        path: ${{ github.workspace }}/p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip
+        path: ${{env.install_dest}}/p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip
   create-release:
     needs: build-multiplatform
     runs-on: windows-latest
@@ -108,7 +109,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: ./artifacts/*/*
-        tag_name: v${{ github.event.inputs.branch }}
+        tag_name: ${{ github.event.inputs.branch }}
         draft: false
         prerelease: false
       env:
