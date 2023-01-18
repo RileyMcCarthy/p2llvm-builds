@@ -57,7 +57,7 @@ jobs:
       run: mkdir -p ./libp2/build
     - name: Configure libp2
       working-directory: ./libp2/build
-      run: cmake -Dllvm='${{env.install_dest}}/bin ../'
+      run: cmake -Dllvm='${{env.install_dest}}/bin' ../
     - name: Build libp2
       working-directory: ./libp2/build
       run: make LLVM='${{env.install_dest}}' -j${{ steps.cpu-cores.outputs.count }}
