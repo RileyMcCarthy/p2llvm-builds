@@ -11,7 +11,7 @@ on:
 jobs:
   build-multiplatform:
     env:
-      install_dest: ${{'${{github.workspace}}'}}/llvm-project/build_release
+      install_dest: ${{github.workspace}}/llvm-project/build_release
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
