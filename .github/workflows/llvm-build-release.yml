@@ -10,12 +10,12 @@ on:
         default: 'master'
 jobs:
   build-multiplatform:
-    env:
-      install_dest: ${{github.workspace}}/llvm-project/build_release
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest, self-hosted]
+    env:
+      install_dest: ${{github.workspace}}/llvm-project/build_release
     steps:
     # Get runner core count
     - name: Get number of CPU cores
