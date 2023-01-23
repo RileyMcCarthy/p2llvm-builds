@@ -31,7 +31,7 @@ jobs:
         submodules: recursive
     # Build llvm
     - name: Create install directory
-      run: python build.py --configure --install ${{env.install_dest}} --cores {{ steps.cpu-cores.outputs.count }}
+      run: python3 build.py --configure --install ${{env.install_dest}} --cores {{ steps.cpu-cores.outputs.count }}
     # Create platformio package.json
     - name: Create package.json
       run: |
