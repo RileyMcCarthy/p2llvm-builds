@@ -58,14 +58,16 @@ jobs:
         " >> '${{env.install_dest}}/package.json'
     # Zip artifacts
     - name: Zip artifact for deployment
-      working-directory: '${{env.install_dest}}'
-      run: zip -r p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip .
+      uses: vimtor/action-zip@v1
+      with:
+        files: '${{env.install_dest}}'
+        dest: p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip
     # Uploading build files
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
         name: p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip
-        path: '${{env.install_dest}}/p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip'
+        path: 'p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip'
   create-release:
     needs: build-multiplatform
     runs-on: windows-latest
