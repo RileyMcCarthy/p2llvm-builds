@@ -1,0 +1,87 @@
+name: build-release
+permissions:
+  contents: write
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to create release from'     
+        required: true
+        default: 'master'
+jobs:
+  build-multiplatform:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest, self-hosted]
+    env:
+      install_dest: ${{github.workspace}}/llvm-project/build_release
+    steps:
+    # Get runner core count
+    - name: Get number of CPU cores
+      uses: SimenB/github-actions-cpu-cores@v1
+      id: cpu-cores
+    - name: Build Information
+      run: echo "Installing to ${{env.install_dest}} with {{ steps.cpu-cores.outputs.count }} cores"
+    # Checkout p2llvm repo and setup environment
+    - uses: actions/checkout@v3
+      with:
+        repository: RileyMcCarthy/p2llvm-build-fix
+        ref: ${{ github.event.inputs.branch }}
+        submodules: recursive
+    # Build llvm
+    - name: Create install directory
+      run: python build.py --configure --install ${{env.install_dest}} --cores {{ steps.cpu-cores.outputs.count }}
+    # Create platformio package.json
+    - name: Create package.json
+      run: |
+        touch '${{env.install_dest}}/package.json'
+        echo "
+        {
+          "name": "toolchain-p2llvm",
+          "version": "${{ github.event.inputs.branch }}",
+          "description": "LLVM Toolchain for Microchip AVR microcontrollers",
+          "keywords": [
+            "toolchain",
+            "build tools",
+            "compiler",
+            "assembler",
+            "linker",
+            "preprocessor",
+            "microchip",
+            "parallax",
+            "propeller"
+          ],
+          "homepage": "https://github.com/ne75/p2llvm",
+          "license": "GPL-2.0-or-later"
+        }
+        " >> '${{env.install_dest}}/package.json'
+    # Zip artifacts
+    - name: Zip artifact for deployment
+      working-directory: '${{env.install_dest}}'
+      run: zip -r p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip .
+    # Uploading build files
+    - name: Archive results
+      uses: actions/upload-artifact@v3
+      with:
+        name: p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip
+        path: '${{env.install_dest}}/p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip'
+  create-release:
+    needs: build-multiplatform
+    runs-on: windows-latest
+    steps:
+    - name: Create artifact dir
+      run: mkdir -p ./artifacts
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: ./artifacts
+    - name: Release with Notes
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ./artifacts/*/*
+        tag_name: ${{ github.event.inputs.branch }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
