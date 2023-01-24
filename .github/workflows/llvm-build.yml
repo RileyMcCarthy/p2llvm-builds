@@ -56,7 +56,7 @@ jobs:
             \"propeller\"
           ],
           \"homepage\": \"https://github.com/ne75/p2llvm\",
-          \"license": \"GPL-2.0-or-later\"
+          \"license\": \"GPL-2.0-or-later\"
         }
         " >> '${{env.install_dest}}/package.json'
     # Zip artifacts
