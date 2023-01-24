@@ -35,27 +35,30 @@ jobs:
     # Create platformio package.json
     - name: Create package.json
       run: |
+        rm -f '${{env.install_dest}}/package.json'
         touch '${{env.install_dest}}/package.json'
-        echo '
+    - name: Complete package.json
+      run: >
+        echo "
         {
-          "name": "toolchain-p2llvm",
-          "version": "${{ github.event.inputs.branch }}",
-          "description": "LLVM Toolchain for Microchip AVR microcontrollers",
-          "keywords": [
-            "toolchain",
-            "build tools",
-            "compiler",
-            "assembler",
-            "linker",
-            "preprocessor",
-            "microchip",
-            "parallax",
-            "propeller"
+          \"name\": \"toolchain-p2llvm\",
+          \"version\": \"${{ github.event.inputs.branch }}\",
+          \"description\": \"LLVM Toolchain for Microchip AVR microcontrollers\",
+          \"keywords\": [
+            \"toolchain\",
+            \"build tools\",
+            \"compiler\",
+            \"assembler\",
+            \"linker\",
+            \"preprocessor\",
+            \"microchip\",
+            \"parallax\",
+            \"propeller\"
           ],
-          "homepage": "https://github.com/ne75/p2llvm",
-          "license": "GPL-2.0-or-later"
+          \"homepage\": \"https://github.com/ne75/p2llvm\",
+          \"license": \"GPL-2.0-or-later\"
         }
-        ' >> '${{env.install_dest}}/package.json'
+        " >> '${{env.install_dest}}/package.json'
     # Zip artifacts
     - name: Zip artifact for deployment
       uses: vimtor/action-zip@v1
