@@ -30,7 +30,7 @@ jobs:
         ref: ${{ github.event.inputs.branch }}
         submodules: recursive
     # Build llvm
-    - name: Create install directory
+    - name: Configure and build llvm and its librarys
       run: python3 build.py --configure --install ${{env.install_dest}} --cores ${{ steps.cpu-cores.outputs.count }}
     # Create platformio package.json
     - name: Create package.json
