@@ -30,8 +30,25 @@ jobs:
         ref: ${{ github.event.inputs.branch }}
         submodules: recursive
     # Build llvm
-    - name: Configure and build llvm and its librarys
-      run: python3 build.py --configure --install ${{env.install_dest}} --cores ${{ steps.cpu-cores.outputs.count }}
+    - name: Create install directory
+      run: mkdir -p ${{ github.workspace }}/llvm-project/build
+    - name: Configure llvm cmake
+      working-directory: ${{ github.workspace }}/llvm-project/build
+      # -DLLVM_BUILD_TOOLS and below is for minimal build, maybe have full and small release?
+      run: >
+        cmake -G "Unix Makefiles" 
+        -DLLVM_INSTALL_UTILS=true
+        -DCMAKE_INSTALL_PREFIX='${{env.install_dest}}'
+        -DLLVM_ENABLE_PROJECTS="lld;clang"
+        -DCMAKE_BUILD_TYPE=Release
+        -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=P2
+        -DLLVM_TARGETS_TO_BUILD=""
+        ../llvm
+    - name: Build LLVM
+      working-directory: ${{ github.workspace }}/llvm-project/build
+      run: make install -j${{ steps.cpu-cores.outputs.count }}
+    - name: Configure and build librarys
+      run: python3 build.py --configure --skip_libc --skip_libp2 --install ${{env.install_dest}} --cores ${{ steps.cpu-cores.outputs.count }}
     # Create platformio package.json
     - name: Create package.json
       run: |
