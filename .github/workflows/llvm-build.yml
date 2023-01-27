@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [self-hosted]
+        os: [self-hosted,ubuntu-latest,windows-latest,macos-latest]
     env:
       install_dest: ${{github.workspace}}/llvm-project/build_release
     steps:
