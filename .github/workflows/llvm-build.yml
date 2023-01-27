@@ -49,12 +49,7 @@ jobs:
       run: make install -j${{ steps.cpu-cores.outputs.count }}
     - name: Configure and build librarys
       run: python3 build.py --configure --skip_libc --skip_libp2 --install ${{env.install_dest}} --cores ${{ steps.cpu-cores.outputs.count }}
-    # Create platformio package.json
-    - name: Create package.json
-      run: |
-        rm -f '${{env.install_dest}}/package.json'
-        touch '${{env.install_dest}}/package.json'
-    - name: Complete package.json
+    - name: Create platformio package.json
       run: >
         echo "
         {
@@ -75,7 +70,7 @@ jobs:
           \"homepage\": \"https://github.com/ne75/p2llvm\",
           \"license\": \"GPL-2.0-or-later\"
         }
-        " >> '${{env.install_dest}}/package.json'
+        " > '${{env.install_dest}}/package.json'
     # Zip artifacts
     - name: Zip artifact for deployment
       uses: vimtor/action-zip@v1
