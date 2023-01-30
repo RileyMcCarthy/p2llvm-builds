@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [self-hosted]
+        os: [self-hosted,ubuntu-latest,windows-latest,macos-latest]
     env:
       install_dest: ${{github.workspace}}/llvm-project/build_release
     steps:
@@ -86,7 +86,7 @@ jobs:
         path: 'p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip'
   create-release:
     needs: build-multiplatform
-    runs-on: windows-latest
+    runs-on: self-hosted
     steps:
     - name: Create artifact dir
       run: mkdir -p ./artifacts
