@@ -76,14 +76,15 @@ jobs:
       uses: thedoctor0/zip-release@0.7.0
       with:
         type: 'zip'
-        path: 'llvm-project/build_release/'
+        directory: 'llvm-project/build_release/'
+        path: './'
         filename: p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip
     # Uploading build files
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
         name: p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip
-        path: 'p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip'
+        path: 'llvm-project/build_release/p2llvm-${{ github.event.inputs.branch }}-${{ runner.os }}-${{ runner.arch }}.zip'
   create-release:
     needs: build-multiplatform
     runs-on: self-hosted
