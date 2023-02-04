@@ -48,7 +48,7 @@ jobs:
       working-directory: ${{ github.workspace }}/llvm-project/build
       run: make install -j${{ steps.cpu-cores.outputs.count }}
     - name: Configure and build librarys
-      run: python3 build.py --configure --skip_libc --skip_libp2 --install ${{env.install_dest}} --cores ${{ steps.cpu-cores.outputs.count }}
+      run: python3 build.py --configure --skip_llvm --install ${{env.install_dest}} --cores ${{ steps.cpu-cores.outputs.count }}
     - name: Create platformio package.json
       run: >
         echo "
