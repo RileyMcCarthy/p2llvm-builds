@@ -1,4 +1,4 @@
-name: build-release-script
+name: toolchain-p2llvm
 permissions:
   contents: write
 on:
