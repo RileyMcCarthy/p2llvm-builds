@@ -44,7 +44,7 @@ jobs:
             \"parallax\",
             \"propeller\"
           ],
-          \"homepage\": \"https://github.com/totalspectrum/spin2cpp",
+          \"homepage\": \"https://github.com/totalspectrum/spin2cpp\",
           \"license\": \"GPL-2.0-or-later\"
         }
         " > 'package.json'
