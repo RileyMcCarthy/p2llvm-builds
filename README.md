@@ -1,4 +1,4 @@
-# p2llvm-builds
+# PlatformIO toolchain for P2LLVM
 CI/CD builder for p2llvm on windows, mac (arm64+intel), and linux.
 
 # Usage
